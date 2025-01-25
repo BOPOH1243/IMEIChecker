@@ -12,7 +12,6 @@ class User(Base):
 
     # Метод для проверки, находится ли пользователь в whitelist
     def is_in_whitelist(self, session: SessionLocal):
-        
         # Проверяем, есть ли у пользователя запись в whitelist
         return session.query(Whitelist).filter(Whitelist.user_id == self.id).first() is not None
     
