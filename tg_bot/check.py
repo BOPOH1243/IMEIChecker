@@ -21,7 +21,7 @@ def check_imei(imei:str):
 
     # Add body
     body =  json.dumps({
-     "deviceId": "356735111052198",
+     "deviceId": str(imei),
      "serviceId": 12
     })
 
