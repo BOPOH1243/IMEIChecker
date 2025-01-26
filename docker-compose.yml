@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      API_SANDBOX_TOKEN: Uor8AZbHYRb6ocM13TYgOLDDTbhdDC4whQeP1SrJ27c45746
+      API_LIVE_TOKEN: sy5woSxuac7xKalljXFjgbB2hCRw7GQLueRtGp1974d8fe72
+      TELEGRAM_BOT_TOKEN: 7950989453:AAHRsPWrOU4CYWj03muFb4g4WpNS5fp1qWE
+      PYTHONPATH: /app
+    volumes:
+      - ./tg_bot/test.db:/app/tg_bot/test.db
+    ports:
+      - "8000:8000" # Указать при необходимости
+    restart: unless-stopped

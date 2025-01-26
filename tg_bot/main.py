@@ -44,7 +44,29 @@ async def handle_check_imei(message: Message, imei: str):
 @dp.message(Command(commands=['start', 'help']))
 async def cmd_start(message: Message):
     await message.reply("Привет! Отправь IMEI для проверки.")
+def is_user_in_whitelist(session, user):
+    """Проверяет, находится ли пользователь в whitelist"""
+    return user.is_in_whitelist(session)
 
+def add_user_to_whitelist(session, user):
+    """Добавляет пользователя в whitelist"""
+    if not is_user_in_whitelist(session, user):
+        whitelist_entry = Whitelist(user_id=user.id)
+        session.add(whitelist_entry)
+        session.commit()
+
+@dp.message(Command(commands=['add_to_whitelist']))
+async def cmd_add_to_whitelist(message: Message):
+    tg_id = str(message.from_user.id)
+    name = message.from_user.full_name
+
+    with SessionLocal() as session:
+        # Создание пользователя, если его нет
+        user = create_user_if_not_exists(session, tg_id, name)
+
+        # Добавление в whitelist
+        add_user_to_whitelist(session, user)
+        await message.reply("Ты был успешно добавлен в вайтлист!")
 @dp.message()
 async def message_handler(message: Message):
     tg_id = str(message.from_user.id)
@@ -66,6 +88,8 @@ async def message_handler(message: Message):
             return
 
         await handle_check_imei(message, imei)
+
+
 
 if __name__ == "__main__":
     dp.run_polling(bot)
